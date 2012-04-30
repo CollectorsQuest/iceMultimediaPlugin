@@ -67,7 +67,7 @@ class IceMultimediaBehavior
   }
 
   /**
-   * Proxy method for MultimediaPeer::retrieveByModel()
+   * Proxy method for iceModelMultimediaPeer::retrieveByModel()
    *
    * @see iceModelMultimediaPeer::createMultimediaFromFile()
    * @see iceModelMultimediaPeer::createMultimediaFromUrl()
@@ -100,7 +100,7 @@ class IceMultimediaBehavior
   }
 
   /**
-   * Proxy method for MultimediaPeer::retrieveByModel()
+   * Proxy method for iceModelMultimediaPeer::retrieveByModel()
    *
    * @see iceModelMultimediaPeer::retrieveByModel()
    */

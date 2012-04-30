@@ -149,9 +149,8 @@ class iceModelMultimedia extends BaseiceModelMultimedia
 
   /**
    * @param  string   $model
-   * @param  integer  $id
    */
-  public function setModel($model, $id = null)
+  public function setModel($model)
   {
     if (is_object($model))
     {
@@ -162,7 +161,6 @@ class iceModelMultimedia extends BaseiceModelMultimedia
     else
     {
       parent::setModel($model);
-      $this->setModelId($id);
     }
   }
 
