@@ -234,7 +234,7 @@ class iceModelMultimedia extends BaseiceModelMultimedia
    * @param  boolean  $watermark
    *
    * @throws LogicException
-   * @return Multimedia|false
+   * @return Multimedia|boolean
    */
   public function makeCustomThumb($width, $height, $which, $method = 'fit', $watermark = true)
   {
@@ -248,22 +248,10 @@ class iceModelMultimedia extends BaseiceModelMultimedia
     {
       try
       {
-        $image = new sfImage($original);
-        $image->setQuality(90);
-        $image->thumbnail($width, $height, $method);
-
-        /**
-         * Add optional watermark to the image
-         */
-        if ($watermark === true && is_file(sfConfig::get('sf_web_dir').'/images/watermark.png') && $image->getWidth() > 200)
-        {
-          $watermark = new sfImage(sfConfig::get('sf_web_dir').'/images/watermark.png');
-          $watermark->opacity(50);
-          $image->overlay($watermark, 'bottom-right');
-        }
+        $thumb = iceModelMultimediaPeer::makeThumb($original, $width .'x'. $height, $method, $watermark);
 
         // Save the thumb
-        $image->saveAs($this->getAbsolutePath($which));
+        $thumb->saveAs($this->getAbsolutePath($which));
 
         return true;
       }

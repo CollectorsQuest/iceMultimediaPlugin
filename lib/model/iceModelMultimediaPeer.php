@@ -57,7 +57,8 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     $q = iceModelMultimediaQuery::create()
        ->filterByModel(str_replace('Sphinx', '', get_class($model)))
        ->filterByModelId($model->getId())
-       ->orderByPosition('ASC')->orderByCreatedAt('ASC')
+       //->orderByPosition(Criteria::ASC)
+       //->orderByCreatedAt(Criteria::ASC)
        ->limit($limit);
 
     if ($type !== null)
@@ -274,6 +275,105 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     }
 
     return false;
+  }
+
+  /**
+   * @param  string   $original
+   * @param  string   $size
+   * @param  string   $method ('fit', 'scale', 'inflate','deflate', 'left' ,'right', 'top', 'bottom', 'center', 'resize')
+   * @param  boolean  $watermark
+   *
+   * @return sfImage
+   * @throws InvalidArgumentException
+   */
+  static public function makeThumb($original, $size, $method, $watermark = true)
+  {
+    if (!is_readable($original)) {
+      throw new InvalidArgumentException('Cannot find/read the source image for the thumbnail');
+    }
+
+    // Create the sfImage object based on $original
+    $image = new sfImage($original);
+
+    @list($width, $height) = explode('x', $size);
+
+    // Support for passing only one side of a square image size
+    if ($height === null) {
+      $height = $width;
+    }
+
+    /**
+     * Handle formats like: 600x0, 320x0, 0x320, 0x150
+     */
+    if ($width === '0' && (int) $height > 0)
+    {
+      $width = ($image->getWidth() / $image->getHeight()) * (int) $height;
+
+      // Make multiple of 2
+      if ($width % 2 !== 0) $width--;
+    }
+    else if ($height === '0' && (int) $width > 0)
+    {
+      $height = ($image->getHeight() / $image->getWidth()) * (int) $width;
+
+      // Make multiple of 2
+      if ($height % 2 !== 0) $height++;
+    }
+
+    /**
+     * Handle formats like: 620!x490, 620x490!
+     */
+    if (substr($width, -1, 1) === '!' && $width !== '!')
+    {
+      $width = rtrim($width, '!');
+      $image->resize($width, ($image->getHeight() / $image->getWidth()) * (int) $width, true, false);
+    }
+    else if (substr($height, -1, 1) === '!' && $height !== '!')
+    {
+      $height = rtrim($height, '!');
+      $image->resize(($image->getWidth() / $image->getHeight()) * (int) $height, $height, true, false);
+    }
+
+    /**
+     * Handle formats like: 600x19:15, 16:9x490
+     */
+    if (stripos($width, ':'))
+    {
+      list($nominator, $denominator) = explode(':', $width);
+      $width = round(($height * $nominator) / $denominator);
+
+      // Make multiple of 2
+      if ($width % 2 !== 0) $width--;
+    }
+    else if (stripos($height, ':'))
+    {
+      list($nominator, $denominator) = explode(':', $height);
+      $height = round(($width * $denominator) / $nominator);
+
+      // Make multiple of 2
+      if ($height % 2 !== 0) $height++;
+    }
+
+    if ($method === 'resize') {
+      $image->resize($width ?: null, $height ?: null, true, false);
+    } else {
+      $image->thumbnail($width, $height, $method);
+    }
+
+    // Set the default quality
+    $image->setQuality(80);
+
+    /**
+     * Add optional watermark to the image
+     */
+    if ($watermark === true && is_file(sfConfig::get('sf_web_dir').'/images/watermark.png') && $image->getWidth() > 200)
+    {
+      $watermark = new sfImage(sfConfig::get('sf_web_dir').'/images/watermark.png');
+      $watermark->opacity(50);
+      $image->overlay($watermark, 'bottom-right');
+    }
+
+    return $image;
   }
 
   /**

@@ -54,7 +54,7 @@ class IceMultimediaBehavior
   public function setPrimaryImage(BaseObject $object, $file, $options = array())
   {
     // First we need to delete the old multimedia records
-    if ($_multimedia = $this->getMultimedia($object))
+    if ($_multimedia = $this->getMultimedia($object, 0, 'image'))
     foreach ($_multimedia as $m)
     {
       $m->delete();
@@ -117,7 +117,7 @@ class IceMultimediaBehavior
       {
         $collection = new PropelObjectCollection(array());
         $collection->setModel('iceModelMultimedia');
-        
+
         $_collection = new PropelObjectCollection(array());
         $_collection->setModel('iceModelMultimedia');
         $_collection->fromXML($element->asXml());
@@ -157,6 +157,8 @@ class IceMultimediaBehavior
         $multimedia[$key] = iceModelMultimediaPeer::retrieveByModel($object, $limit, $type, $primary);
       }
     }
+
+
 
     return self::$_multimedia[$key] = $multimedia[$key];
   }
