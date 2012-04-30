@@ -33,8 +33,8 @@ class iceModelMultimedia extends BaseiceModelMultimedia
 
     parent::save($con);
   }
-  
-  public function postSave(PropelPDO $con = null) 
+
+  public function postSave(PropelPDO $con = null)
   {
     /**
      * Update the Eblob cache
@@ -233,6 +233,7 @@ class iceModelMultimedia extends BaseiceModelMultimedia
    * @param  string   $method  Can be ('fit', 'scale', 'inflate','deflate', 'left' ,'right', 'top', 'bottom', 'center')
    * @param  boolean  $watermark
    *
+   * @throws LogicException
    * @return Multimedia|false
    */
   public function makeCustomThumb($width, $height, $which, $method = 'fit', $watermark = true)
@@ -387,7 +388,7 @@ class iceModelMultimedia extends BaseiceModelMultimedia
     }
 
     $model = $this->getModelObject();
-    
+
     parent::delete($con);
 
     /**

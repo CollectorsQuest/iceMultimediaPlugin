@@ -19,6 +19,7 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     'image/pjpeg' => 'jpg',
     'image/png' => 'png',
     'image/gif' => 'gif',
+    'video/x-flv' => 'flv',
     'application/pdf' => 'pdf',
     'application/x-pdf' => 'pdf',
     'application/octet-stream' => 'pdf'
@@ -35,7 +36,7 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
 
   /**
    * @static
-   * 
+   *
    * @param  BaseObject $model
    * @param  integer    $limit
    * @param  string     $type
@@ -253,14 +254,14 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     {
       $multimedia->setCreatedAt(filemtime($file));
     }
-    
+
     $multimedia->createDirectory();
     if (copy($file, $multimedia->getAbsolutePath('original')))
     {
       try
       {
         $multimedia->save();
-        
+
         // Delegate the creation of the thumbnails to the model class
         if (method_exists($model, 'createMultimediaThumbs'))
         {
@@ -277,7 +278,7 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
 
   /**
    * Calculate new image dimensions to new constraints
-   * 
+   *
    * @param integer $w
    * @param integer $h
    * @param integer $mw
@@ -388,6 +389,7 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     list($width, $height) = @getimagesize($file);
     return ($height > 0) ? $width / $height : 1;
   }
+
 }
 
 sfPropelBehavior::add(
