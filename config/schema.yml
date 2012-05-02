@@ -20,6 +20,6 @@ classes:
       position:    { type: smallint, sqlType: "SMALLINT UNSIGNED", default: 65535 }
       created_at:  ~
     indexes:
-      multimedia_I_1: [model, model_id]
+      multimedia_I_2: [model, model_id]
     uniques:
       multimedia_U_2: [model, model_id, md5]
