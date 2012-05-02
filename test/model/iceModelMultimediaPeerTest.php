@@ -3,7 +3,7 @@
 require_once dirname(__FILE__).'/../../../../test/bootstrap/model.php';
 require_once dirname(__FILE__).'/../../lib/model/iceModelMultimediaPeer.php';
 
-$t = new lime_test(14, array('output' => new lime_output_color(), 'error_reporting' => true));
+$t = new lime_test(17, array('output' => new lime_output_color(), 'error_reporting' => true));
 
 $images = array(
   __DIR__ .'/../../data/test/05620d783231c09402ea1d406d35a58c.jpg',
@@ -13,7 +13,8 @@ $images = array(
   __DIR__ .'/../../data/test/38eb5d37b931b5c7c6429bc07600fbb9.jpg',
   __DIR__ .'/../../data/test/collectible-1911.jpg',
   __DIR__ .'/../../data/test/collectible-31.jpg',
-  __DIR__ .'/../../data/test/collectible-1357.jpg'
+  __DIR__ .'/../../data/test/collectible-1357.jpg',
+  __DIR__ .'/../../data/test/movie-mark-03-armor-33130.jpg',
 );
 
 $t->diag('::getValidContentTypes()');
@@ -52,7 +53,7 @@ $t->diag('::makeThumb()');
   $thumb = iceModelMultimediaPeer::makeThumb($images[5], '19:15x490!', 'top');
   $t->is(array($thumb->getWidth(), $thumb->getHeight()), array(620, 490));
 
-  $thumb = iceModelMultimediaPeer::makeThumb($images[5], '620x0', 'resize');
+  $thumb = iceModelMultimediaPeer::makeThumb($images[5], '620!x0', 'resize');
   $t->is(array($thumb->getWidth(), $thumb->getHeight()), array(620, 824));
 
   $thumb = iceModelMultimediaPeer::makeThumb($images[5], '0x490', 'resize');
@@ -60,3 +61,12 @@ $t->diag('::makeThumb()');
 
   $thumb = iceModelMultimediaPeer::makeThumb($images[5], '150', 'center');
   $t->is(array($thumb->getWidth(), $thumb->getHeight()), array(150, 150));
+
+  $thumb = iceModelMultimediaPeer::makeThumb($images[7], '1024x768', 'resize');
+  $t->is(array($thumb->getWidth(), $thumb->getHeight()), array(800, 600));
+
+  $thumb = iceModelMultimediaPeer::makeThumb($images[8], '620!x0', 'resize');
+  $t->is(array($thumb->getWidth(), $thumb->getHeight()), array(620, 826));
+
+  $thumb = iceModelMultimediaPeer::makeThumb($images[8], '620x0', 'resize');
+  $t->is(array($thumb->getWidth(), $thumb->getHeight()), array(450, 600));

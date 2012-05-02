@@ -355,7 +355,7 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     }
 
     if ($method === 'resize') {
-      $image->resize($width ?: null, $height ?: null, true, false);
+      $image->resize($width ?: null, $height ?: null, false, true);
     } else {
       $image->thumbnail($width, $height, $method);
     }
