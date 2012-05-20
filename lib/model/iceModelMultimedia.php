@@ -44,7 +44,7 @@ class iceModelMultimedia extends BaseiceModelMultimedia
       /** @var $m iceModelMultimedia */
       $m = iceModelMultimediaPeer::retrieveByModel($model);
 
-      $model->setEblobElement('multimedia', $m->toXML());
+      $model->setEblobElement('multimedia', $m->toXML(true));
       $model->save();
     }
 
@@ -384,7 +384,7 @@ class iceModelMultimedia extends BaseiceModelMultimedia
     {
       $m = iceModelMultimediaPeer::retrieveByModel($model);
 
-      $model->setEblobElement('multimedia', $m->toXML());
+      $model->setEblobElement('multimedia', $m->toXML(true));
       $model->save();
     }
   }

@@ -187,7 +187,7 @@ class IceMultimediaBehavior
   */
   public function preDelete(BaseObject $object)
   {
-    if ($_multimedia = $this->getMultimedia($object))
+    if ($_multimedia = $this->getMultimedia($object, 0, null, null, Propel::CONNECTION_WRITE))
     foreach ($_multimedia as $m)
     {
       $m->delete();
