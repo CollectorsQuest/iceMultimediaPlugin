@@ -363,18 +363,25 @@ class iceModelMultimedia extends BaseiceModelMultimedia
   {
     $original = $this->getAbsolutePath('original');
 
-    $files = sfFinder::type('file')
-           ->name(str_replace('original', '*', basename($original)))
-           ->in(dirname($original));
+    $f = sfFinder::type('file')
+       ->name(str_replace('original', '*', basename($original)));
 
-    if ($files)
-    foreach ($files as $file)
+    if ($files = $f->in(dirname($original)))
     {
-      @unlink($file);
+      foreach ($files as $file)
+      {
+        /**
+         * @todo: Turn on file deletion
+         *
+         * @unlink($file);
+         */
+      }
     }
 
+    // Get the Model Object before we delete
     $model = $this->getModelObject();
 
+    // Do delete the Multimedia object
     parent::delete($con);
 
     /**
@@ -385,7 +392,7 @@ class iceModelMultimedia extends BaseiceModelMultimedia
       $m = iceModelMultimediaPeer::retrieveByModel($model);
 
       $model->setEblobElement('multimedia', $m->toXML(true));
-      $model->save();
+      $model->save($con);
     }
   }
 }

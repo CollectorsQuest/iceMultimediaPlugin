@@ -182,9 +182,9 @@ class IceMultimediaBehavior
     return self::$_counts[$key] = $counts[$key];
   }
 
- /**
-  * @param  BaseObject  $object
-  */
+  /**
+   * @param  BaseObject  $object
+   */
   public function preDelete(BaseObject $object)
   {
     if ($_multimedia = $this->getMultimedia($object, 0, null, null, Propel::CONNECTION_WRITE))

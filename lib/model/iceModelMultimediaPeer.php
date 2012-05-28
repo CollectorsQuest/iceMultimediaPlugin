@@ -57,8 +57,8 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     $q = iceModelMultimediaQuery::create()
        ->filterByModel(str_replace('Sphinx', '', get_class($model)))
        ->filterByModelId($model->getId())
-       //->orderByPosition(Criteria::ASC)
-       //->orderByCreatedAt(Criteria::ASC)
+       ->orderByPosition(Criteria::ASC)
+       ->orderByCreatedAt(Criteria::ASC)
        ->limit($limit);
 
     if ($type !== null)
@@ -68,14 +68,9 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     if ($primary !== null)
     {
       $q->filterByIsPrimary($primary);
-
-      if ($primary === true)
-      {
-        return $q->findOne();
-      }
     }
 
-    return $q->find();
+    return ($primary === true || $limit === 1) ? $q->findOne() : $q->find();
   }
 
   /**
