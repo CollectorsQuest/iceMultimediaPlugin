@@ -194,10 +194,14 @@ class IceMultimediaBehavior
     }
   }
 
-  protected function clearStaticCache()
+  /**
+   * Clear the internal multimedia object cache
+   */
+  public function clearStaticCache()
   {
     // Reset the local multimedia and counts cache
     self::$_multimedia = array();
     self::$_counts = array();
   }
+
 }
