@@ -63,12 +63,14 @@ class sfImageTextImageMagick extends sfImageTransformAbstract
 
   /**
    * Construct an sfImageText object.
-   *
-   * @param array integer
    */
-  public function __construct($text, $x=0, $y=0, $size=10, $font='Arial', $color='#000000', $angle=0)
+  public function __construct($text, $x = 0, $y = 0, $size = 10, $font = 'Arial', $color = '#000000', $angle = 0)
   {
-    $this->font_dir = sfConfig::get('app_iceMultimediaPlugin_font_dir','/usr/share/fonts/truetype/msttcorefonts');
+    $this->font_dir = sfConfig::get(
+      'app_ice_multimedia_font_dir',
+      '/usr/share/fonts/truetype/msttcorefonts'
+    );
+
     $this->setText($text);
     $this->setX($x);
     $this->setY($y);

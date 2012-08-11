@@ -126,7 +126,14 @@ class sfImage
    */
   public function create($x=null, $y=null, $color=null)
   {
-    $defaults = sfConfig::get('app_iceMultimediaPlugin_default_image',array('filename' => 'Untitled.png', 'mime_type' => 'image/png', 'width' => 100, 'height' => 100));
+    $defaults = sfConfig::get(
+      'app_ice_multimedia_default_image',
+      array(
+        'filename' => 'Untitled.png',
+        'mime_type' => 'image/png',
+        'width' => 100, 'height' => 100
+      )
+    );
 
     // Get default width
     if (!is_numeric($x))
@@ -147,15 +154,15 @@ class sfImage
         $y = (int)$defaults['height'];
       }
     }
-  
+
     $this->getAdapter()->create($x, $y);
     $this->getAdapter()->setFilename($defaults['filename']);
-    
+
     // Set the image color if set
     if(is_null($color))
     {
       $color = '#FFFFFF';
-      
+
       if(isset($defaults['color']))
       {
         $color = $defaults['color'];
@@ -163,7 +170,7 @@ class sfImage
     }
 
     $this->fill(0, 0, $color);
-    
+
     return $this;
   }
 
@@ -212,7 +219,7 @@ class sfImage
   public function loadString($string)
   {
     $this->getAdapter()->loadString($string);
-    
+
     return $this;
   }
 
@@ -304,7 +311,7 @@ class sfImage
   /**
    * Magic method. This allows the calling of execute tranform methods on sfImageTranform objects.
    *
-   * @method 
+   * @method
    * @param string $name the name of the transform, sfImage<NAME>
    * @param array Arguments for the transform class execute method
    * @return sfImage
@@ -464,7 +471,10 @@ class sfImage
    */
   protected function autoDetectMIMETypeFromFile($filename)
   {
-    $settings = sfConfig::get('app_iceMultimediaPlugin_mime_type', array('auto_detect' => true, 'library' => 'gd_mime_type'));
+    $settings = sfConfig::get(
+      'app_ice_multimedia_mime_type',
+      array('auto_detect' => true, 'library' => 'gd_mime_type')
+    );
 
     $support_libraries = array('fileinfo', 'mime_type', 'gd_mime_type');
 
@@ -530,7 +540,7 @@ class sfImage
     // No adapter set so use default
     if ($name == '')
     {
-      $name = sfConfig::get('app_iceMultimediaPlugin_default_adapter','GD');
+      $name = sfConfig::get('app_ice_multimedia_default_adapter','GD');
     }
 
     $adapter_class = 'sfImageTransform' . $name . 'Adapter';
@@ -548,14 +558,14 @@ class sfImage
 
     return $adapter;
   }
- 
+
   /**
    * Copies the image object and returns it
    *
    * Returns a copy of the sfImage object
    *
    * @return sfImage
-   */ 
+   */
   public function __clone()
   {
   	$this->adapter = $this->adapter->copy();
