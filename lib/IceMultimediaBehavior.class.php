@@ -197,7 +197,7 @@ class IceMultimediaBehavior
   /**
    * Clear the internal multimedia object cache
    */
-  public function clearStaticCache()
+  public static function clearStaticCache()
   {
     // Reset the local multimedia and counts cache
     self::$_multimedia = array();
