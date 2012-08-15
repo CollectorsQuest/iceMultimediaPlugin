@@ -206,7 +206,15 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
       case 'gif':
       default:
 
-        $image = new sfImage($file);
+        try
+        {
+          $image = new sfImage($file);
+        }
+        catch (Exception $e)
+        {
+          return false;
+        }
+
         if ($image && (false === $image->getAdapter()->hasHolder()))
         {
           return false;
