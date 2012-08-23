@@ -364,7 +364,7 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     }
 
     // Set the default quality
-    $image->setQuality(80);
+    $image->setQuality($width < 201 ? 90 : 80);
 
     /**
      * Add optional watermark to the image
