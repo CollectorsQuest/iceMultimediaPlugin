@@ -53,15 +53,23 @@ class IceMultimediaBehavior
    */
   public function setPrimaryImage(BaseObject $object, $file, $options = array())
   {
-    // First we need to delete the old multimedia records
-    if ($_multimedia = $this->getMultimedia($object, 0, 'image'))
-    foreach ($_multimedia as $m)
+    // First we need to set unset the primary status
+    // from the rest of the multimedia records
+    if ($_multimedia = iceModelMultimediaPeer::retrieveByModel($object, 0, 'image'))
     {
-      $m->delete();
+      foreach ($_multimedia as $m)
+      {
+        $m->setIsPrimary(false);
+      }
+      $_multimedia->save();
     }
 
     $key = md5(serialize(array(get_class($object), $object->getId(), 1, 'image', true)));
-    self::$_multimedia[$key] = iceModelMultimediaPeer::createMultimediaFromFile($object, $file, $options);
+    if (self::$_multimedia[$key] = iceModelMultimediaPeer::createMultimediaFromFile($object, $file, $options))
+    {
+      self::$_multimedia[$key]->setIsPrimary(true);
+      self::$_multimedia[$key]->save();
+    }
 
     return self::$_multimedia[$key];
   }
