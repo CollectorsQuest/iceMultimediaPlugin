@@ -68,7 +68,11 @@ class sfImageTextGD extends sfImageTransformAbstract
    */
   public function __construct($text, $x=0, $y=0, $size=10, $font='Arial', $color='#000000', $angle=0)
   {
-    $this->font_dir = sfConfig::get('app_iceMultimediaPlugin_font_dir','/usr/share/fonts/truetype/msttcorefonts');
+    $this->font_dir = sfConfig::get(
+      'app_ice_multimedia_font_dir',
+      '/usr/share/fonts/truetype/msttcorefonts'
+    );
+
     $this->setText($text);
     $this->setX($x);
     $this->setY($y);
@@ -239,7 +243,7 @@ class sfImageTextGD extends sfImageTransformAbstract
     $rgb = sscanf($this->color, '#%2x%2x%2x');
 
     $color = imagecolorallocate($resource, $rgb[0], $rgb[1], $rgb[2]);
-    
+
     // disable alpha handling to enable font rendering
     imagealphablending($resource, true);
 

@@ -330,7 +330,7 @@ class iceModelMultimedia extends BaseiceModelMultimedia
         $extension = 'pdf';
         break;
       case 'video':
-        $extension = 'swf';
+        $extension = 'flv';
         break;
       case 'image':
       default:

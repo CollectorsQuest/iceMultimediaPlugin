@@ -206,7 +206,15 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
       case 'gif':
       default:
 
-        $image = new sfImage($file);
+        try
+        {
+          $image = new sfImage($file);
+        }
+        catch (Exception $e)
+        {
+          return false;
+        }
+
         if ($image && (false === $image->getAdapter()->hasHolder()))
         {
           return false;
@@ -356,7 +364,7 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     }
 
     // Set the default quality
-    $image->setQuality(80);
+    $image->setQuality($width < 201 ? 90 : 80);
 
     /**
      * Add optional watermark to the image

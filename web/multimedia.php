@@ -18,7 +18,7 @@ if (in_array($type, array('image', 'video', 'pdf')))
   $databases = sfYaml::load($_SERVER['SF_ROOT_DIR'] .'/config/databases.yml');
   $databases['prod'] = $databases['all'];
 
-  preg_match('/-(\d+)\.(jpg|swf|pdf)/i', $filename, $m);
+  preg_match('/-(\d+)\.(jpg|flv|pdf)/i', $filename, $m);
   if (isset($m[1]) && ctype_digit($m[1]))
   {
     $hs = new IceHandlerSocket('ice-mysql-slave');

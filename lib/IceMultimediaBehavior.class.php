@@ -64,6 +64,9 @@ class IceMultimediaBehavior
       $_multimedia->save();
     }
 
+    // Clear the static variables
+    $this->clearStaticCache($object);
+
     $key = md5(serialize(array(get_class($object), $object->getId(), 1, 'image', true)));
     if (self::$_multimedia[$key] = iceModelMultimediaPeer::createMultimediaFromFile($object, $file, $options))
     {
@@ -97,12 +100,8 @@ class IceMultimediaBehavior
       $_multimedia = iceModelMultimediaPeer::createMultimediaFromFile($object, $file, $options);
     }
 
-    /**
-     * Clear the static variables
-     *
-     * @todo  Maybe here we can just increment the $count and add to the $_multimedia array?
-     */
-    $this->clearStaticCache();
+    // Clear the static variables
+    $this->clearStaticCache($object);
 
     return $_multimedia;
   }
@@ -121,7 +120,7 @@ class IceMultimediaBehavior
     {
       $multimedia[$key] = null;
 
-      if ($mode == Propel::CONNECTION_READ && ($element = $object->getEblobElement('multimedia')))
+      if ($mode === Propel::CONNECTION_READ && ($element = $object->getEblobElement('multimedia')))
       {
         $collection = new PropelObjectCollection(array());
         $collection->setModel('iceModelMultimedia');
@@ -166,8 +165,6 @@ class IceMultimediaBehavior
       }
     }
 
-
-
     return self::$_multimedia[$key] = $multimedia[$key];
   }
 
@@ -196,20 +193,28 @@ class IceMultimediaBehavior
   public function preDelete(BaseObject $object)
   {
     if ($_multimedia = $this->getMultimedia($object, 0, null, null, Propel::CONNECTION_WRITE))
-    foreach ($_multimedia as $m)
     {
-      $m->delete();
+      foreach ($_multimedia as $m)
+      {
+        $m->delete();
+      }
     }
   }
 
   /**
    * Clear the internal multimedia object cache
    */
-  public function clearStaticCache()
+  public function clearStaticCache(BaseObject $object = null)
   {
     // Reset the local multimedia and counts cache
     self::$_multimedia = array();
     self::$_counts = array();
+
+    if ($object !== null)
+    {
+      $object->_counts = array();
+      $object->_multimedia = array();
+    }
   }
 
 }
