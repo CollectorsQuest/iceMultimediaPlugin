@@ -51,6 +51,15 @@ class iceModelMultimedia extends BaseiceModelMultimedia
     parent::postSave($con);
   }
 
+  public function setIsPrimary($v)
+  {
+    parent::setIsPrimary($v);
+
+    // Because it is the primary,
+    // let's also reset the position to 0
+    $this->setPosition(0);
+  }
+
   /**
    * @param  string  $which
    * @return string
