@@ -19,6 +19,7 @@ class iceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     'image/pjpeg' => 'jpg',
     'image/png' => 'png',
     'image/gif' => 'gif',
+    'image/x-ms-bmp' => 'jpg',
     'video/x-flv' => 'flv',
     'application/pdf' => 'pdf',
     'application/x-pdf' => 'pdf',
