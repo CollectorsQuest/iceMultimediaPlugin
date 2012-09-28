@@ -24,10 +24,10 @@ class IceMultimediaBehavior
     $multimedia = array_merge(self::$_multimedia, $object->_multimedia);
 
     $key = md5(serialize(array(get_class($object), $object->getId(), 1, 'image', true)));
-    if (!array_key_exists($key, $multimedia))
+    if (!array_key_exists($key, $multimedia) || $mode === Propel::CONNECTION_WRITE)
     {
       // Trying to avoid a MySQL query here
-      if ($this->getMultimediaCount($object, 'image') > 0)
+      if ($this->getMultimediaCount($object, 'image', $mode) > 0)
       {
         $multimedia[$key] = $this->getMultimedia($object, 1, 'image', true, $mode);
       }
@@ -116,7 +116,7 @@ class IceMultimediaBehavior
     $multimedia = array_merge(self::$_multimedia, $object->_multimedia);
 
     $key = md5(serialize(array(get_class($object), $object->getId(), $limit, $type, $primary)));
-    if (!array_key_exists($key, $multimedia))
+    if (!array_key_exists($key, $multimedia) || $mode === Propel::CONNECTION_WRITE)
     {
       $multimedia[$key] = null;
 
@@ -129,7 +129,7 @@ class IceMultimediaBehavior
         $_collection->setModel('iceModelMultimedia');
         $_collection->fromXML($element->asXml());
 
-        foreach ($_collection as $k => $m)
+        foreach ($_collection as $m)
         {
           $true = true;
 
@@ -173,14 +173,14 @@ class IceMultimediaBehavior
    *
    * @see iceModelMultimediaPeer::countByModel()
    */
-  public function getMultimediaCount(BaseObject $object, $type = null)
+  public function getMultimediaCount(BaseObject $object, $type = null, $mode = Propel::CONNECTION_READ)
   {
     $counts = array_merge(self::$_counts, $object->_counts);
 
     $key = md5(serialize(array(get_class($object), $object->getId(), $type)));
-    if (!array_key_exists($key, $counts))
+    if (!array_key_exists($key, $counts) || $mode === Propel::CONNECTION_WRITE)
     {
-      $multimedia = $this->getMultimedia($object, 0, $type, null, Propel::CONNECTION_READ);
+      $multimedia = $this->getMultimedia($object, 0, $type, null, $mode);
       $counts[$key] = ($multimedia instanceof PropelObjectCollection) ? $multimedia->count() : 0;
     }
 
