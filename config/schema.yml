@@ -14,6 +14,7 @@ classes:
       type:        { type: char, sqlType: "ENUM('image','video','pdf')", default: image, required: true }
       name:        { type: char, size: 128, required: true, primaryString: true }
       slug:        { type: char, size: 128, required: true, index: unique }
+      role:        { type: varchar(50), required: true, default: main }
       md5:         { type: char, size: 32, required: true }
       source:      { type: varchar(255), required: false }
       is_primary:  { type: boolean, sqlType: "BOOL", default: false }

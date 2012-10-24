@@ -2,14 +2,8 @@
 
 /**
  * iceModelMultimedia form.
- *
- * @package    ##PROJECT_NAME##
- * @subpackage form
- * @author     ##AUTHOR_NAME##
  */
-class iceModelMultimediaForm extends BaseiceModelMultimediaForm
+class iceModelMultimediaForm extends PluginiceModelMultimediaForm
 {
-  public function configure()
-  {
-  }
+
 }
