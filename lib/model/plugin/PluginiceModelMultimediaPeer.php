@@ -6,6 +6,8 @@
 class PluginiceModelMultimediaPeer extends BaseiceModelMultimediaPeer
 {
 
+  const ROLE_MAIN = 'main';
+
   /**
    * @var array
    */
@@ -251,6 +253,11 @@ class PluginiceModelMultimediaPeer extends BaseiceModelMultimediaPeer
     $multimedia->setModel($model);
     $multimedia->setMd5($md5);
     $multimedia->setName($filename);
+    $multimedia->setRole(isset($options['role'])
+      ? $options['role']
+      : self::ROLE_MAIN
+    );
+
     if (filemtime($file))
     {
       $multimedia->setCreatedAt(filemtime($file));

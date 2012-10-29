@@ -17,7 +17,8 @@ class iceMultimediaPluginConfiguration extends sfPluginConfiguration
       array('IceMultimediaBehavior', 'setPrimaryImage'),
       array('IceMultimediaBehavior', 'addMultimedia'),
       array('IceMultimediaBehavior', 'getMultimedia'),
-      array('IceMultimediaBehavior', 'getMultimediaCount')
+      array('IceMultimediaBehavior', 'getMultimediaCount'),
+      array('IceMultimediaBehavior', 'getMultimediaByRole'),
     ));
 
     return parent::initialize();
