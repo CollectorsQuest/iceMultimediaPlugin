@@ -311,7 +311,9 @@ class IceMultimediaBehavior
         )
       ));
 
-      return $collection;
+      return count($collection)
+        ? $collection
+        : null;
     }
     else
     {
