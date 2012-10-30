@@ -117,7 +117,8 @@ class IceMultimediaBehavior
     $limit = 0,
     $type = null,
     $primary = null,
-    $mode = Propel::CONNECTION_READ
+    $mode = Propel::CONNECTION_READ,
+    $role = PluginiceModelMultimediaPeer::ROLE_MAIN
   ) {
     $multimedia = array_merge(self::$_multimedia, (array) $object->_multimedia);
 
@@ -177,7 +178,7 @@ class IceMultimediaBehavior
 
     $_multimedia = self::$_multimedia[$key] = $multimedia[$key];
 
-    return $_multimedia;
+    return self::_filterByRole($_multimedia, $role);
   }
 
   /**
@@ -232,71 +233,84 @@ class IceMultimediaBehavior
   }
 
   /**
-   * Retrieve one or many multimedia records based on role
+   * Role centric proxy to getMultimedia()
    *
    * @param     BaseObject $object
    * @param     string $role
    * @param     integer $limit
    * @param     string $type
+   * @param     boolean $primary
+   * @param     string $mode Propel::CONNECTION_READ|Propel::CONNECTION_WRITE
    *
    * @return    iceModelMultimedia|iceModelMultimedia[]|null
    */
   public function getMultimediaByRole(
     BaseObject $object,
-    $role = PluginiceModelMultimediaPeer::ROLE_MAIN,
+    $role,
     $limit = 0,
-    $type = null
+    $type = null,
+    $primary = null,
+    $mode = Propel::CONNECTION_READ
   ) {
-    $_multimedia = $this->getMultimedia($object, $limit, $type);
+    $_multimedia = $this->getMultimedia(
+      $object, $limit, $type, $primary, $mode, $role
+    );
 
+    // if an object collection with only one object was the result of filtering,
+    // return the object itself
+    if ($_multimedia instanceof PropelObjectCollection && 1 == count($_multimedia))
+    {
+      return $_multimedia->getFirst();
+    }
+    else
+    {
+      // return the filtered result as is
+      return $_multimedia;
+    }
+
+  }
+
+  /**
+   * Filter one or many multimedia records on role.
+   *
+   * @param     mixed $_multimedia
+   * @param     string $role
+   *
+   * @return    boolean
+   */
+  protected static function _filterByRole($_multimedia, $role)
+  {
     // if a single object was returned by getMultimedia
     if ($_multimedia instanceof iceModelMultimedia)
     {
       // test for role and return it or null
-      return self::_filterByRole($_multimedia, $role)
+      return $_multimedia->getRole() == $role
         ? $_multimedia
         : null;
     }
     elseif (count($_multimedia))
     {
-      // getMultimedia returned an object collection, filter it by role
+      // we are filtering an object collection
 
       // First we need to create a new collection object to return
       $collection = new PropelObjectCollection(array());
       $collection->setModel('iceModelMultimedia');
 
-      // and then populate it with the proper data
+      // and then populate it with the filtered data
       $collection->setData(array_filter(
         $_multimedia->getArrayCopy(),
         create_function(
           '$m, $role = "' . $role . '"',
-          'return IceMultimediaBehavior::_filterByRole($m, $role);'
+          'return $m->getRole() == $role;'
         )
       ));
 
-      // return the resulting object collection,
-      // or return null if all items were filtered out
-      return count($collection)
-        ? (1 == count($collection) ? $collection->getFirst() : $collection)
-        : null;
+      return $collection;
     }
     else
     {
       return null;
     }
-  }
-
-  /**
-   * Filter a multimedia record on role. Used for filtering collections
-   *
-   * @param     iceModelMultimedia $m
-   * @param     string $role
-   *
-   * @return    boolean
-   */
-  public static function _filterByRole(iceModelMultimedia $m, $role)
-  {
-    return $m->getRole() == $role;
   }
 
 }
