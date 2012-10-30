@@ -68,7 +68,7 @@ class IceMultimediaBehavior
     }
 
     // Clear the static variables
-    $this->clearStaticCache($object);
+    self::clearStaticCache($object);
 
     $key = md5(serialize(array(get_class($object), $object->getId(), 1, 'image', true)));
     if (( self::$_multimedia[$key] = iceModelMultimediaPeer::createMultimediaFromFile($object, $file, $options) ))
@@ -104,7 +104,7 @@ class IceMultimediaBehavior
     }
 
     // Clear the static variables
-    $this->clearStaticCache($object);
+    self::clearStaticCache($object);
 
     return $_multimedia;
   }
@@ -225,7 +225,7 @@ class IceMultimediaBehavior
   /**
    * Clear the internal multimedia object cache
    */
-  public function clearStaticCache(BaseObject $object = null)
+  public static function clearStaticCache(BaseObject $object = null)
   {
     // Reset the local multimedia and counts cache
     self::$_multimedia = array();
