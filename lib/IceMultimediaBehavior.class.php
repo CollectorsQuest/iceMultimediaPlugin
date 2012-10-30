@@ -21,7 +21,9 @@ class IceMultimediaBehavior
    */
   public function getPrimaryImage(BaseObject $object, $mode = Propel::CONNECTION_READ)
   {
-    $multimedia = array_merge(self::$_multimedia, (array) $object->_multimedia);
+    $multimedia = isset($object->_multimedia)
+      ? array_merge(self::$_multimedia, $object->_multimedia)
+      : self::$_multimedia;
 
     $key = md5(serialize(array(get_class($object), $object->getId(), 1, 'image', true)));
     if (!array_key_exists($key, $multimedia) || $mode === Propel::CONNECTION_WRITE)
@@ -120,7 +122,9 @@ class IceMultimediaBehavior
     $mode = Propel::CONNECTION_READ,
     $role = PluginiceModelMultimediaPeer::ROLE_MAIN
   ) {
-    $multimedia = array_merge(self::$_multimedia, (array) $object->_multimedia);
+    $multimedia = isset($object->_multimedia)
+      ? array_merge(self::$_multimedia, $object->_multimedia)
+      : self::$_multimedia;
 
     $key = md5(serialize(array(get_class($object), $object->getId(), $limit, $type, $primary)));
     if (!array_key_exists($key, $multimedia) || $mode === Propel::CONNECTION_WRITE)
@@ -188,7 +192,9 @@ class IceMultimediaBehavior
    */
   public function getMultimediaCount(BaseObject $object, $type = null, $mode = Propel::CONNECTION_READ)
   {
-    $counts = array_merge(self::$_counts, (array) $object->_counts);
+    $counts = isset($object->_counts)
+      ? array_merge(self::$_counts, $object->_counts)
+      : self::$_counts;
 
     $key = md5(serialize(array(get_class($object), $object->getId(), $type)));
     if (!array_key_exists($key, $counts) || $mode === Propel::CONNECTION_WRITE)
@@ -227,8 +233,8 @@ class IceMultimediaBehavior
 
     if ($object !== null)
     {
-      $object->_counts = array();
-      $object->_multimedia = array();
+      $object->_counts = null;
+      $object->_multimedia = null;
     }
   }
 
