@@ -21,7 +21,7 @@ class IceMultimediaBehavior
    */
   public function getPrimaryImage(BaseObject $object, $mode = Propel::CONNECTION_READ)
   {
-    $multimedia = array_merge(self::$_multimedia, $object->_multimedia);
+    $multimedia = array_merge(self::$_multimedia, (array) $object->_multimedia);
 
     $key = md5(serialize(array(get_class($object), $object->getId(), 1, 'image', true)));
     if (!array_key_exists($key, $multimedia) || $mode === Propel::CONNECTION_WRITE)
@@ -55,12 +55,13 @@ class IceMultimediaBehavior
   {
     // First we need to set unset the primary status
     // from the rest of the multimedia records
-    if ($_multimedia = iceModelMultimediaPeer::retrieveByModel($object, 0, 'image'))
+    if (( $_multimedia = iceModelMultimediaPeer::retrieveByModel($object, 0, 'image') ))
     {
       foreach ($_multimedia as $m)
       {
         $m->setIsPrimary(false);
       }
+
       $_multimedia->save();
     }
 
@@ -68,7 +69,7 @@ class IceMultimediaBehavior
     $this->clearStaticCache($object);
 
     $key = md5(serialize(array(get_class($object), $object->getId(), 1, 'image', true)));
-    if (self::$_multimedia[$key] = iceModelMultimediaPeer::createMultimediaFromFile($object, $file, $options))
+    if (( self::$_multimedia[$key] = iceModelMultimediaPeer::createMultimediaFromFile($object, $file, $options) ))
     {
       self::$_multimedia[$key]->setIsPrimary(true);
       self::$_multimedia[$key]->save();
@@ -111,9 +112,14 @@ class IceMultimediaBehavior
    *
    * @see iceModelMultimediaPeer::retrieveByModel()
    */
-  public function getMultimedia(BaseObject $object, $limit = 0, $type = null, $primary = null, $mode = Propel::CONNECTION_READ)
-  {
-    $multimedia = array_merge(self::$_multimedia, $object->_multimedia);
+  public function getMultimedia(
+    BaseObject $object,
+    $limit = 0,
+    $type = null,
+    $primary = null,
+    $mode = Propel::CONNECTION_READ
+  ) {
+    $multimedia = array_merge(self::$_multimedia, (array) $object->_multimedia);
 
     $key = md5(serialize(array(get_class($object), $object->getId(), $limit, $type, $primary)));
     if (!array_key_exists($key, $multimedia) || $mode === Propel::CONNECTION_WRITE)
@@ -153,7 +159,9 @@ class IceMultimediaBehavior
           }
         }
 
-        $multimedia[$key] = ($primary === true || $limit == 1) ? $collection->getFirst() : $collection;
+        $multimedia[$key] = ($primary === true || $limit == 1)
+          ? $collection->getFirst()
+          : $collection;
       }
 
       /**
@@ -161,11 +169,15 @@ class IceMultimediaBehavior
        */
       if (count($multimedia[$key]) == 0)
       {
-        $multimedia[$key] = iceModelMultimediaPeer::retrieveByModel($object, $limit, $type, $primary);
+        $multimedia[$key] = iceModelMultimediaPeer::retrieveByModel(
+          $object, $limit, $type, $primary
+        );
       }
     }
 
-    return self::$_multimedia[$key] = $multimedia[$key];
+    $_multimedia = self::$_multimedia[$key] = $multimedia[$key];
+
+    return $_multimedia;
   }
 
   /**
@@ -175,13 +187,15 @@ class IceMultimediaBehavior
    */
   public function getMultimediaCount(BaseObject $object, $type = null, $mode = Propel::CONNECTION_READ)
   {
-    $counts = array_merge(self::$_counts, $object->_counts);
+    $counts = array_merge(self::$_counts, (array) $object->_counts);
 
     $key = md5(serialize(array(get_class($object), $object->getId(), $type)));
     if (!array_key_exists($key, $counts) || $mode === Propel::CONNECTION_WRITE)
     {
       $multimedia = $this->getMultimedia($object, 0, $type, null, $mode);
-      $counts[$key] = ($multimedia instanceof PropelObjectCollection) ? $multimedia->count() : 0;
+      $counts[$key] = $multimedia instanceof PropelObjectCollection
+        ? $multimedia->count()
+        : 0;
     }
 
     return self::$_counts[$key] = $counts[$key];
@@ -192,7 +206,7 @@ class IceMultimediaBehavior
    */
   public function preDelete(BaseObject $object)
   {
-    if ($_multimedia = $this->getMultimedia($object, 0, null, null, Propel::CONNECTION_WRITE))
+    if (( $_multimedia = $this->getMultimedia($object, 0, null, null, Propel::CONNECTION_WRITE) ))
     {
       foreach ($_multimedia as $m)
       {
