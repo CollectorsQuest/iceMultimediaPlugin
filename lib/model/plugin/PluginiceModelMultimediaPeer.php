@@ -271,8 +271,9 @@ class PluginiceModelMultimediaPeer extends BaseiceModelMultimediaPeer
         $multimedia->save();
 
         // Delegate the creation of the thumbnails to the model class
-        if (method_exists($model, 'createMultimediaThumbs'))
-        {
+        if (iceModelMultimediaPeer::ROLE_MAIN == $multimedia->getRole() &&
+            method_exists($model, 'createMultimediaThumbs')
+        ) {
           $model->createMultimediaThumbs($multimedia, $options);
         }
 
