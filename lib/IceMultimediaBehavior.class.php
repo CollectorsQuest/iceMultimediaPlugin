@@ -273,8 +273,10 @@ class IceMultimediaBehavior
     }
     else
     {
-      // return the filtered result as is
-      return $_multimedia;
+      // return the filtered result, or null if empty collection
+      return count($_multimedia)
+        ? $_multimedia
+        : null;
     }
 
   }
