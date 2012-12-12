@@ -182,7 +182,10 @@ class IceMultimediaBehavior
 
     $_multimedia = self::$_multimedia[$key] = $multimedia[$key];
 
-    return self::_filterByRole($_multimedia, $role) ?: $_multimedia;
+    $empty_result = new PropelObjectCollection(array());
+    $empty_result->setModel('iceModelMultimedia');
+
+    return self::_filterByRole($_multimedia, $role) ?: $empty_result;
   }
 
   /**
