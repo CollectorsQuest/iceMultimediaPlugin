@@ -182,7 +182,7 @@ class IceMultimediaBehavior
 
     $_multimedia = self::$_multimedia[$key] = $multimedia[$key];
 
-    return self::_filterByRole($_multimedia, $role);
+    return self::_filterByRole($_multimedia, $role) ?: $_multimedia;
   }
 
   /**
